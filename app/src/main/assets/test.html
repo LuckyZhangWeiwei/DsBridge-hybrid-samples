@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="dsbridge.js"></script>
+        <title></title>
+        <style>
+            .btn {
+                color: #FFF;
+                background: #999;
+                border-radius: 4px;
+                margin: 5px;
+                margin-bottom: 12px;
+                padding: 5px;
+                font-size: 18px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="btn" onclick="synCall()">同步调用-js call android native</div>
+        <div class="btn" onclick="asyncCall()">异步调用-js call android native</div>
+        <div class="btn" onclick="nativeNotifyCall()">调用原生通知</div>
+        <div class="btn" onclick="nativeServiceCall()">调用原生服务</div>
+        <div class="btn" onclick="destroyNativeService()">销毁原生服务</div>
+        <script>
+            function synCall() {
+              //  const message = dsBridge.call("synchronizedCall", "params-into-java")
+              //  alert(message)
+              dsBridge.call("synchronizedCall", "Js params-into-java")
+            }
+
+            function asyncCall() {
+                dsBridge.call(
+                    "asynchronizeCall",
+                     "params-into-java",
+                      function(message) {
+                        alert(message)
+                      }
+              )
+            }
+
+            function nativeNotifyCall() {
+                dsBridge.call("nativeNotifyCall", "nativeNotifyCall")
+            }
+
+            function nativeServiceCall() {
+                dsBridge.call("nativeServiceCall", "nativeServiceCall")
+                alert('service start')
+            }
+
+            function destroyNativeService() {
+                dsBridge.call("destroyNativeService", "destroyNativeService")
+                alert('service stop')
+            }
+
+            dsBridge.register('androidMethodSync', function(str) {
+                return str + ' from Js end'
+            })
+
+            dsBridge.registerAsyn('androidMethodAsync', function(responseCallback) {
+                responseCallback('from Js end Async')
+            })
+        </script>
+    </body>
+</html>
